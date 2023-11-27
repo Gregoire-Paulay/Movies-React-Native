@@ -19,8 +19,8 @@ import { styled } from "nativewind";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-export default function PopularMovies(props: Props): JSX.Element {
-  const [isLoading, setIsLoading] = useState(true);
+export default function PopularMovies(props: Props): React.JSX.Element {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [moviesData, setMoviesData] = useState<TMovies | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [zodError, setZodError] = useState<ZodError | null>(null);
