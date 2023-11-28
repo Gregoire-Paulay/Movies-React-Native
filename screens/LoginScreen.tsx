@@ -1,9 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/core";
 import { useAuthContext } from "../contexts/auth-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { LottiesView } from "../components/LottieView";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Text, TextInput, View, TouchableOpacity } from "react-native";
 
@@ -18,23 +16,22 @@ import { styled } from "nativewind";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledKeyboardAwareScrollView = styled(KeyboardAwareScrollView);
 
 // Props
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../components/Nav";
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
-export default function LoginScreen(props: Props): React.JSX.Element {
-  const navigation = useNavigation();
-
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+export default function LoginScreen({ navigation }: Props): React.JSX.Element {
+  const { setToken } = useAuthContext();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<Error | null>(null);
-  const [zodError, setZodError] = useState<ZodError | null>(null);
 
-  const { setToken } = useAuthContext();
+  // Error
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [zodError, setZodError] = useState<ZodError | null>(null);
 
   // constante pour gérer l'affichage du mot de passe
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -58,27 +55,27 @@ export default function LoginScreen(props: Props): React.JSX.Element {
         // console.log(response.data);
         const userToken = response.data.token;
         setToken(userToken);
-      } catch (error: any) {
-        console.log("ERROR ==>", error.response.data);
+      } catch (error) {
+        return setErrorMessage("Email or password incorrect");
       }
     };
     fetchData();
   };
 
   return (
-    <KeyboardAwareScrollView>
-      <View>
+    <StyledKeyboardAwareScrollView className="bg-gray-900">
+      <StyledView className="items-center gap-y-12 mt-8">
         <StyledTextInput
-          className="text-xl"
+          className="text-xl border-2 rounded-xl py-2 pl-3 w-3/4 bg-gray-100"
           placeholder="Email"
           value={email}
           onChangeText={(text) => {
             setErrorMessage("");
-            setEmail(text);
+            setEmail(text.toLowerCase());
           }}
         />
 
-        <StyledView className="flex-row gap-8">
+        <StyledView className="flex-row justify-between border-2 w-3/4 py-2 px-3 rounded-xl bg-gray-100">
           <StyledTextInput
             className="text-xl"
             placeholder="Password"
@@ -89,7 +86,7 @@ export default function LoginScreen(props: Props): React.JSX.Element {
               setPassword(text);
             }}
           />
-          <TouchableOpacity
+          <StyledTouchableOpacity
             onPress={() => {
               setShowPassword(!showPassword);
             }}
@@ -99,27 +96,34 @@ export default function LoginScreen(props: Props): React.JSX.Element {
             ) : (
               <FontAwesome5 name="eye-slash" size={24} color="black" />
             )}
-          </TouchableOpacity>
+          </StyledTouchableOpacity>
         </StyledView>
 
-        <Text>{errorMessage && errorMessage}</Text>
+        <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
+          {errorMessage && errorMessage}
+        </StyledText>
 
-        <TouchableOpacity
+        <StyledTouchableOpacity
+          className="bg-emerald-700 rounded-xl px-5 py-2"
           onPress={async () => {
             Submit();
           }}
         >
-          <Text>Sign in</Text>
-        </TouchableOpacity>
+          <StyledText className="text-white text-3xl font-bold shadow">
+            Sign in
+          </StyledText>
+        </StyledTouchableOpacity>
 
-        {/* <TouchableOpacity
+        <TouchableOpacity
           onPress={() => {
-            navigation.navigate("SignUp");
+            navigation.navigate("Signup");
           }}
         >
-          <Text>No account ? Register</Text>
-        </TouchableOpacity> */}
-      </View>
-    </KeyboardAwareScrollView>
+          <StyledText className="text-white text-lg">
+            No account ? Register
+          </StyledText>
+        </TouchableOpacity>
+      </StyledView>
+    </StyledKeyboardAwareScrollView>
   );
 }

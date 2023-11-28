@@ -12,14 +12,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
 // Screens Import
-import PopularMoviesScreen from "../screens/PopularMoviesScreen";
+import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
+import PopularMoviesScreen from "../screens/PopularMoviesScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
 export type RootStackParamList = {
-  Popular: undefined;
-  Login: undefined;
   Signup: undefined;
+  Login: undefined;
+  Popular: undefined;
   Search: undefined;
   Profile: undefined;
 };
@@ -56,10 +57,29 @@ const Nav = () => {
     <NavigationContainer>
       {!userToken ? (
         <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
+            options={{
+              headerTitleAlign: "center",
+            }}
+          />
         </Stack.Navigator>
       ) : (
-        <Tab.Navigator>
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: "tomato",
+            tabBarInactiveTintColor: "gray",
+          }}
+        >
           <Tab.Screen
             name="TabPopular"
             options={{
@@ -70,7 +90,7 @@ const Nav = () => {
             }}
           >
             {() => (
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Navigator>
                 <Stack.Screen name="Popular" component={PopularMoviesScreen} />
               </Stack.Navigator>
             )}
@@ -90,7 +110,7 @@ const Nav = () => {
             }}
           >
             {() => (
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Navigator>
                 <Stack.Screen name="Search" component={PopularMoviesScreen} />
               </Stack.Navigator>
             )}
@@ -106,7 +126,7 @@ const Nav = () => {
             }}
           >
             {() => (
-              <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Navigator>
                 <Stack.Screen name="Profile" component={ProfileScreen} />
               </Stack.Navigator>
             )}
