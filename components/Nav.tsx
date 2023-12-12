@@ -14,8 +14,9 @@ import { AntDesign } from "@expo/vector-icons";
 // Screens Import
 import SignupScreen from "../screens/SignupScreen";
 import LoginScreen from "../screens/LoginScreen";
-import PopularMoviesScreen from "../screens/PopularMoviesScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import PopularMoviesScreen from "../screens/PopularMoviesScreen";
+import SearchMoviesScreen from "../screens/SearchMoviesScreen";
 
 export type RootStackParamList = {
   Signup: undefined;
@@ -23,6 +24,7 @@ export type RootStackParamList = {
   Popular: undefined;
   Search: undefined;
   Profile: undefined;
+  Details: undefined;
 };
 export type RootTabParamList = {
   TabPopular: undefined;
@@ -91,7 +93,14 @@ const Nav = () => {
           >
             {() => (
               <Stack.Navigator>
-                <Stack.Screen name="Popular" component={PopularMoviesScreen} />
+                <Stack.Screen
+                  name="Popular"
+                  component={PopularMoviesScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "Popular Movies",
+                  }}
+                />
               </Stack.Navigator>
             )}
           </Tab.Screen>
@@ -111,7 +120,7 @@ const Nav = () => {
           >
             {() => (
               <Stack.Navigator>
-                <Stack.Screen name="Search" component={PopularMoviesScreen} />
+                <Stack.Screen name="Search" component={SearchMoviesScreen} />
               </Stack.Navigator>
             )}
           </Tab.Screen>

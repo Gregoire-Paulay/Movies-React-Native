@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { LottiesView } from "../components/LottieView";
-import { Text, View } from "react-native";
+import { Text, View, Image, ScrollView } from "react-native";
 
 // Schema
 import { ZodError, z } from "zod";
@@ -18,6 +18,8 @@ type Props = NativeStackScreenProps<RootStackParamList, "Popular">;
 import { styled } from "nativewind";
 const StyledView = styled(View);
 const StyledText = styled(Text);
+const StyledImage = styled(Image);
+const StyledScrollView = styled(ScrollView);
 
 export default function PopularMovies(props: Props): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -65,11 +67,35 @@ export default function PopularMovies(props: Props): React.JSX.Element {
 
   return (
     <View>
-      <StyledView className="flex-1 items-center justify-center bg-black">
-        <StyledText className="text-white">
-          This is the PopularMovies component
-        </StyledText>
-      </StyledView>
+      <StyledScrollView>
+        <StyledView className="flex-1 items-center justify-center gap-4 border-4 bg-slate-900">
+          {moviesData?.results.map((movie) => {
+            return (
+              <StyledView
+                key={movie.id}
+                className=" w-11/12 items-center bg-slate-700 py-4 rounded-md"
+              >
+                <StyledText className="text-2xl text-center font-bold color-white pt-2">
+                  {movie.title}
+                </StyledText>
+                <StyledText
+                  className="text-center pb-3 pt-1 px-2 color-white"
+                  numberOfLines={2}
+                >
+                  {movie.overview}
+                </StyledText>
+                <StyledImage
+                  source={{
+                    uri:
+                      `https://image.tmdb.org/t/p/w500` + movie.backdrop_path,
+                  }}
+                  className="w-10/12 h-48 rounded-md"
+                />
+              </StyledView>
+            );
+          })}
+        </StyledView>
+      </StyledScrollView>
     </View>
   );
 }
