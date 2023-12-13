@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { LottiesView } from "../components/LottieView";
-import { Text, View, Image, ScrollView } from "react-native";
+import { Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
 
 // Schema
 import { ZodError, z } from "zod";
@@ -20,8 +20,11 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledImage = styled(Image);
 const StyledScrollView = styled(ScrollView);
+const StyledTouchableOpacity = styled(TouchableOpacity);
 
-export default function PopularMovies(props: Props): React.JSX.Element {
+export default function PopularMovies({
+  navigation,
+}: Props): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [moviesData, setMoviesData] = useState<TMovies | null>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -71,15 +74,18 @@ export default function PopularMovies(props: Props): React.JSX.Element {
         <StyledView className="flex-1 items-center justify-center gap-4 border-4 bg-slate-900">
           {moviesData?.results.map((movie) => {
             return (
-              <StyledView
+              <StyledTouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Details", { movie_id: movie.id });
+                }}
                 key={movie.id}
-                className=" w-11/12 items-center bg-slate-700 py-4 rounded-md"
+                className=" w-11/12 items-center bg-slate-700 py-2 rounded-md"
               >
-                <StyledText className="text-2xl text-center font-bold color-white pt-2">
+                <StyledText className="text-2xl text-center font-bold color-white pt-1">
                   {movie.title}
                 </StyledText>
                 <StyledText
-                  className="text-center pb-3 pt-1 px-2 color-white"
+                  className="text-center pb-3 pt-1 px-2 text-slate-200"
                   numberOfLines={2}
                 >
                   {movie.overview}
@@ -91,7 +97,7 @@ export default function PopularMovies(props: Props): React.JSX.Element {
                   }}
                   className="w-10/12 h-48 rounded-md"
                 />
-              </StyledView>
+              </StyledTouchableOpacity>
             );
           })}
         </StyledView>

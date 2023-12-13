@@ -173,15 +173,23 @@ export default function SignupScreen({ navigation }: Props) {
           </StyledView>
         ) : (
           <StyledView>
-            <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
-              {usernameError && usernameError}
-            </StyledText>
-            <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
-              {emailError && emailError}
-            </StyledText>
-            <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
-              {passwordError && passwordError}
-            </StyledText>
+            {usernameError && (
+              <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
+                {usernameError}
+              </StyledText>
+            )}
+
+            {emailError && (
+              <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
+                {emailError}
+              </StyledText>
+            )}
+
+            {passwordError && (
+              <StyledText className="text-red-500 font-bold text-center mt-2 text-xl">
+                {passwordError}
+              </StyledText>
+            )}
           </StyledView>
         )}
 

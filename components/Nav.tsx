@@ -17,6 +17,8 @@ import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import PopularMoviesScreen from "../screens/PopularMoviesScreen";
 import SearchMoviesScreen from "../screens/SearchMoviesScreen";
+import MovieDetailScreen from "../screens/MovieDetails";
+import ReviewCreateScreen from "../screens/ReviewCreateScreen";
 
 export type RootStackParamList = {
   Signup: undefined;
@@ -24,7 +26,8 @@ export type RootStackParamList = {
   Popular: undefined;
   Search: undefined;
   Profile: undefined;
-  Details: undefined;
+  Details: any;
+  Review: any;
 };
 export type RootTabParamList = {
   TabPopular: undefined;
@@ -99,6 +102,22 @@ const Nav = () => {
                   options={{
                     headerTitleAlign: "center",
                     headerTitle: "Popular Movies",
+                  }}
+                />
+                <Stack.Screen
+                  name="Details"
+                  component={MovieDetailScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "Movie Details",
+                  }}
+                />
+                <Stack.Screen
+                  name="Review"
+                  component={ReviewCreateScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "Create a review",
                   }}
                 />
               </Stack.Navigator>
