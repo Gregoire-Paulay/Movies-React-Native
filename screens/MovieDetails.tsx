@@ -119,25 +119,26 @@ export default function MovieDetailScreen({
             Runtime: {moviesData?.runtime} minute
           </StyledText>
           <StyledText className="color-white text-center text-base pb-3">
-            Rating: {moviesData?.vote_average} / 10 with
+            Rating: {moviesData?.vote_average} / 10 with{" "}
             {moviesData?.vote_count} vote
           </StyledText>
         </StyledView>
 
+        <StyledTouchableOpacity
+          className="border-2 bg-yellow-600 py-1 px-2 rounded-md mt-2 "
+          onPress={() => {
+            navigation.navigate("Review", { movieId: moviesData?.id });
+          }}
+        >
+          <StyledText className="color-white text-lg">
+            Add a review for this film
+          </StyledText>
+        </StyledTouchableOpacity>
+
         <StyledView className="w-11/12 border-2 items-center mt-6 bg-slate-500 rounded-lg">
           <StyledText className="text-2xl color-white font-bold text-center mt-1">
-            REVIEWS
+            ALL REVIEWS
           </StyledText>
-          <StyledTouchableOpacity
-            className="border-2 bg-yellow-600 py-1 px-2 rounded-md mt-2 "
-            onPress={() => {
-              navigation.navigate("Review", { movieId: moviesData?.id });
-            }}
-          >
-            <StyledText className="color-white text-lg">
-              Add a review for this film
-            </StyledText>
-          </StyledTouchableOpacity>
 
           <StyledView>
             <StyledText></StyledText>
