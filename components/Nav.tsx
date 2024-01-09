@@ -117,7 +117,7 @@ const Nav = () => {
                   component={ReviewCreateScreen}
                   options={{
                     headerTitleAlign: "center",
-                    headerTitle: "Create a review",
+                    headerTitle: "Review's Creation",
                   }}
                 />
               </Stack.Navigator>
