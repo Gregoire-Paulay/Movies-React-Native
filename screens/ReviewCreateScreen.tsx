@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "../contexts/auth-context";
-import { LottiesView } from "../components/LottieView";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 
 // Schema
@@ -27,8 +26,9 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
   const { userToken } = useAuthContext();
   const { params }: any = useRoute();
   const movieId = params.movieId;
+
   const [title, setTitle] = useState<string>("");
-  const [feeling, setFeeling] = useState<string>("");
+  const [feeling, setFeeling] = useState<"Good" | "Bad" | "Neutral">();
   const [opinion, setOpinion] = useState<string>("");
 
   // Error
@@ -61,13 +61,18 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
             },
           }
         );
+
         if (
           response.data.message ===
           "This user already posted a review for this film"
         ) {
           setErrorMessage("You already created a review for this film");
         }
-        console.log(response.data.message);
+
+        // console.log(response.data.message);
+        if (response.data.message === "Review created") {
+          alert("Your review has been created");
+        }
       } catch (error: any) {
         setErrorMessage(error);
       }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useAuthContext } from "../contexts/auth-context";
 import { LottiesView } from "../components/LottieView";
 import {
   Text,
@@ -14,7 +15,9 @@ import {
 import { ZodError, z } from "zod";
 import { ParsedData } from "../utils/tools/parsedData";
 import { MoviesDetailsSchema } from "../utils/zodSchema/MovieSchema";
+import { GetReviewSchema } from "../utils/zodSchema/ReviewSchema";
 type TMovies = z.infer<typeof MoviesDetailsSchema>;
+type TReview = z.infer<typeof GetReviewSchema>;
 
 // Props
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -34,8 +37,11 @@ export default function MovieDetailScreen({
   navigation,
 }: Props): React.JSX.Element {
   const { params }: any = useRoute();
+  const { userToken } = useAuthContext();
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [moviesData, setMoviesData] = useState<TMovies | null>(null);
+  const [reviews, setReviews] = useState<TReview | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [zodError, setZodError] = useState<ZodError | null>(null);
 
@@ -65,6 +71,35 @@ export default function MovieDetailScreen({
       }
     };
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchDataReview = async () => {
+      try {
+        const { data } = await axios.get(
+          `https://site--movies--hpyqm5px6d9r.code.run/review/${params.movie_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+              "Content-Type": "Application/json",
+            },
+          }
+        );
+        console.log(data);
+
+        const parsedData: TReview | null = ParsedData<TReview | null>(
+          data,
+          GetReviewSchema,
+          zodError,
+          setZodError
+        );
+        setReviews(parsedData);
+        // console.log("Parse", parsedData);
+      } catch (error: any) {
+        console.log("ERROR ==>", error);
+      }
+    };
+    fetchDataReview();
   }, []);
 
   if (error)
@@ -140,11 +175,17 @@ export default function MovieDetailScreen({
             ALL REVIEWS
           </StyledText>
 
-          <StyledView>
-            <StyledText></StyledText>
-            <StyledText></StyledText>
-            <StyledText></StyledText>
-          </StyledView>
+          <StyledText>{}</StyledText>
+
+          {reviews?.map((review) => {
+            return (
+              <StyledView>
+                <StyledText>{review.title}</StyledText>
+                <StyledText>{review.opinion}</StyledText>
+                <StyledText>{review.user.account.username}</StyledText>
+              </StyledView>
+            );
+          })}
         </StyledView>
       </StyledView>
     </StyledScrollView>
