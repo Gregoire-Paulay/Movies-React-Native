@@ -85,7 +85,7 @@ export default function MovieDetailScreen({
             },
           }
         );
-        console.log(data);
+        // console.log(data);
 
         const parsedData: TReview | null = ParsedData<TReview | null>(
           data,
@@ -100,7 +100,7 @@ export default function MovieDetailScreen({
       }
     };
     fetchDataReview();
-  }, []);
+  }, [reviews]);
 
   if (error)
     return (
@@ -160,26 +160,27 @@ export default function MovieDetailScreen({
         </StyledView>
 
         <StyledTouchableOpacity
-          className="border-2 bg-yellow-600 py-1 px-2 rounded-md mt-2 "
+          className="border-2 bg-yellow-600 py-1 px-2 rounded-md mt-8"
           onPress={() => {
             navigation.navigate("Review", { movieId: moviesData?.id });
           }}
         >
-          <StyledText className="color-white text-lg">
+          <StyledText className="color-white text-xl font-bold">
             Add a review for this film
           </StyledText>
         </StyledTouchableOpacity>
 
-        <StyledView className="w-11/12 border-2 items-center mt-6 bg-slate-500 rounded-lg">
+        <StyledView className="w-11/12 border-2 items-center mt-2 bg-slate-500 rounded-lg">
           <StyledText className="text-2xl color-white font-bold text-center mt-1">
             ALL REVIEWS
           </StyledText>
 
-          <StyledText>{}</StyledText>
-
           {reviews?.map((review) => {
             return (
-              <StyledView>
+              <StyledView
+                key={review._id}
+                className="border-2 w-3/4 mb-2 items-center justify-center"
+              >
                 <StyledText>{review.title}</StyledText>
                 <StyledText>{review.opinion}</StyledText>
                 <StyledText>{review.user.account.username}</StyledText>
