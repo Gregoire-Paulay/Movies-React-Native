@@ -28,6 +28,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Details: any;
   Review: any;
+  DetailsSearch: any;
 };
 export type RootTabParamList = {
   TabPopular: undefined;
@@ -140,6 +141,14 @@ const Nav = () => {
             {() => (
               <Stack.Navigator>
                 <Stack.Screen name="Search" component={SearchMoviesScreen} />
+                <Stack.Screen
+                  name="DetailsSearch"
+                  component={MovieDetailScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "Movie Details",
+                  }}
+                />
               </Stack.Navigator>
             )}
           </Tab.Screen>

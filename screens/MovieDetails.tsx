@@ -23,7 +23,10 @@ type TReview = z.infer<typeof GetReviewSchema>;
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../components/Nav";
 import { useRoute } from "@react-navigation/core";
-type Props = NativeStackScreenProps<RootStackParamList, "Details">;
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  "Details" | "DetailsSearch"
+>;
 
 // Tailwind CSS
 import { styled } from "nativewind";
@@ -42,6 +45,8 @@ export default function MovieDetailScreen({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [moviesData, setMoviesData] = useState<TMovies | null>(null);
   const [reviews, setReviews] = useState<TReview | null>(null);
+
+  // Error
   const [error, setError] = useState<Error | null>(null);
   const [zodError, setZodError] = useState<ZodError | null>(null);
 
@@ -104,9 +109,11 @@ export default function MovieDetailScreen({
 
   if (error)
     return (
-      <StyledText className="text-red-700 mt-4">
-        Error: {error.message}
-      </StyledText>
+      <StyledView className="items-center justify-center h-full bg-slate-700">
+        <StyledText className="text-red-700 mt-4 font-bold text-2xl ">
+          Error: {error.message}
+        </StyledText>
+      </StyledView>
     );
   if (isLoading) {
     return <LottiesView />;
@@ -171,9 +178,15 @@ export default function MovieDetailScreen({
         </StyledTouchableOpacity>
 
         <StyledView className="w-11/12 border-2 items-center mt-2 bg-slate-500 rounded-lg">
-          <StyledText className="text-2xl color-white font-bold text-center mt-1">
-            ALL REVIEWS
-          </StyledText>
+          {reviews ? (
+            <StyledText className="text-2xl color-white font-bold text-center mt-1">
+              ALL REVIEWS
+            </StyledText>
+          ) : (
+            <StyledText className="text-2xl color-white font-bold text-center mt-1">
+              NO REVIEWS FOR THIS FILM
+            </StyledText>
+          )}
 
           {reviews?.map((review) => {
             return (

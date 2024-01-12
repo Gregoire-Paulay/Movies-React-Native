@@ -27,6 +27,8 @@ export default function PopularMovies({
 }: Props): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [moviesData, setMoviesData] = useState<TMovies | null>(null);
+
+  //Error
   const [error, setError] = useState<Error | null>(null);
   const [zodError, setZodError] = useState<ZodError | null>(null);
 
@@ -60,9 +62,11 @@ export default function PopularMovies({
 
   if (error)
     return (
-      <StyledText className="text-red-700 mt-4">
-        Error: {error.message}
-      </StyledText>
+      <StyledView className="items-center justify-center h-full bg-slate-700">
+        <StyledText className="text-red-700 mt-4 font-bold text-2xl ">
+          Error: {error.message}
+        </StyledText>
+      </StyledView>
     );
   if (isLoading) {
     return <LottiesView />;
@@ -90,13 +94,24 @@ export default function PopularMovies({
                 >
                   {movie.overview}
                 </StyledText>
-                <StyledImage
-                  source={{
-                    uri:
-                      `https://image.tmdb.org/t/p/w500` + movie.backdrop_path,
-                  }}
-                  className="w-10/12 h-48 rounded-md"
-                />
+
+                {movie.backdrop_path ? (
+                  <StyledImage
+                    source={{
+                      uri:
+                        `https://image.tmdb.org/t/p/w500` + movie.backdrop_path,
+                    }}
+                    className="w-10/12 h-48 rounded-md"
+                  />
+                ) : (
+                  <StyledImage
+                    source={{
+                      uri:
+                        `https://image.tmdb.org/t/p/w500` + movie.poster_path,
+                    }}
+                    className="w-10/12 h-48 rounded-md"
+                  />
+                )}
               </StyledTouchableOpacity>
             );
           })}
