@@ -14,3 +14,10 @@ export const SignupSchema = z.object({
     .string()
     .min(6, { message: "Your password need to be at least 6 characters long" }),
 });
+
+export const ProfileSchema = z.object({
+  avatar: z.string(),
+  email: z.string(),
+  id: z.string(),
+  username: z.string(),
+});

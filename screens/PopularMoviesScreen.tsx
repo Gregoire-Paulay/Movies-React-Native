@@ -73,51 +73,48 @@ export default function PopularMovies({
   }
 
   return (
-    <View>
-      <StyledScrollView>
-        <StyledView className="flex-1 items-center justify-center gap-4 border-4 bg-slate-900">
-          {moviesData?.results.map((movie) => {
-            return (
-              <StyledTouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Details", { movie_id: movie.id });
-                }}
-                key={movie.id}
-                className=" w-11/12 items-center bg-slate-700 py-2 rounded-md"
+    <StyledScrollView>
+      <StyledView className="flex-1 items-center justify-center gap-4 border-4 bg-slate-900">
+        {moviesData?.results.map((movie) => {
+          return (
+            <StyledTouchableOpacity
+              onPress={() => {
+                navigation.navigate("Details", { movie_id: movie.id });
+              }}
+              key={movie.id}
+              className=" w-11/12 items-center bg-slate-700 py-2 rounded-md"
+            >
+              <StyledText className="text-2xl text-center font-bold color-white pt-1">
+                {movie.title}
+              </StyledText>
+              <StyledText
+                className="text-center pb-3 pt-1 px-2 text-slate-200"
+                numberOfLines={2}
               >
-                <StyledText className="text-2xl text-center font-bold color-white pt-1">
-                  {movie.title}
-                </StyledText>
-                <StyledText
-                  className="text-center pb-3 pt-1 px-2 text-slate-200"
-                  numberOfLines={2}
-                >
-                  {movie.overview}
-                </StyledText>
+                {movie.overview}
+              </StyledText>
 
-                {movie.backdrop_path ? (
-                  <StyledImage
-                    source={{
-                      uri:
-                        `https://image.tmdb.org/t/p/w500` + movie.backdrop_path,
-                    }}
-                    className="w-10/12 h-48 rounded-md"
-                  />
-                ) : (
-                  <StyledImage
-                    source={{
-                      uri:
-                        `https://image.tmdb.org/t/p/w500` + movie.poster_path,
-                    }}
-                    className="w-10/12 h-48 rounded-md"
-                  />
-                )}
-              </StyledTouchableOpacity>
-            );
-          })}
-        </StyledView>
-      </StyledScrollView>
-    </View>
+              {movie.backdrop_path ? (
+                <StyledImage
+                  source={{
+                    uri:
+                      `https://image.tmdb.org/t/p/w500` + movie.backdrop_path,
+                  }}
+                  className="w-10/12 h-48 rounded-md"
+                />
+              ) : (
+                <StyledImage
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/w500` + movie.poster_path,
+                  }}
+                  className="w-10/12 h-48 rounded-md"
+                />
+              )}
+            </StyledTouchableOpacity>
+          );
+        })}
+      </StyledView>
+    </StyledScrollView>
   );
 }
 
