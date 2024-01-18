@@ -72,7 +72,7 @@ export default function SignupScreen({ navigation }: Props) {
           parsedData
         );
 
-        console.log(response.data);
+        // console.log(response.data);
         alert("Account created");
         const userToken = response.data.token;
         setToken(userToken);

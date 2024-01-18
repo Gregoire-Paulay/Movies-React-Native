@@ -21,3 +21,5 @@ export const ProfileSchema = z.object({
   id: z.string(),
   username: z.string(),
 });
+
+export const EmailSchema = z.object({ email: z.string().email() });
