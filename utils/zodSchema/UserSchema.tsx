@@ -23,3 +23,8 @@ export const ProfileSchema = z.object({
 });
 
 export const EmailSchema = z.object({ email: z.string().email() });
+export const UsernameSchema = z.object({
+  username: z
+    .string()
+    .min(3, { message: "Your username need to be at least 3 characters long" }),
+});

@@ -134,9 +134,9 @@ export default function SignupScreen({ navigation }: Props) {
             }}
           >
             {showPassword ? (
-              <FontAwesome5 name="eye" size={24} color="black" />
-            ) : (
               <FontAwesome5 name="eye-slash" size={24} color="black" />
+            ) : (
+              <FontAwesome5 name="eye" size={24} color="black" />
             )}
           </StyledTouchableOpacity>
         </StyledView>
@@ -158,9 +158,9 @@ export default function SignupScreen({ navigation }: Props) {
             }}
           >
             {showConfirmPassword ? (
-              <FontAwesome5 name="eye" size={24} color="black" />
-            ) : (
               <FontAwesome5 name="eye-slash" size={24} color="black" />
+            ) : (
+              <FontAwesome5 name="eye" size={24} color="black" />
             )}
           </StyledTouchableOpacity>
         </StyledView>
