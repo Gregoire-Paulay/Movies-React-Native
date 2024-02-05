@@ -12,11 +12,13 @@ import {
   ProfileSchema,
   EmailSchema,
   UsernameSchema,
+  AvatarSchema,
 } from "../utils/zodSchema/UserSchema";
 import { ParsedData } from "../utils/tools/parsedData";
 type TProfile = z.infer<typeof ProfileSchema>;
 type TEmail = z.infer<typeof EmailSchema>;
 type TUsername = z.infer<typeof UsernameSchema>;
+type TAvatar = z.infer<typeof AvatarSchema>;
 
 // Props
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -47,7 +49,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   const [showUsernameChange, setShowUsernameChange] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
-  const [selectedPic, setSelectedPic] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("");
 
   // Gestion des changements pour l'utilisateur
   const handleUpdate = async () => {
@@ -55,7 +57,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
 
     if (email) {
       try {
-        console.log("Dans changemail");
+        // console.log("Dans changemail");
 
         const parsedData: TEmail | null = ParsedData<TEmail | null>(
           {
@@ -89,9 +91,9 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
     }
 
     if (username) {
-      if (username.length > 3) {
+      if (username.length >= 3) {
         try {
-          console.log("Dans Change Username");
+          // console.log("Dans Change Username");
 
           const parsedData: TUsername | null = ParsedData<TUsername | null>(
             { username },
@@ -120,9 +122,41 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
           }
         }
       } else {
-        console.log("Trop court");
+        // console.log("Trop court");
+        alert("Username too short, need to be at least 3 characters");
       }
     }
+
+    if (avatar) {
+      const tab = avatar.split(".");
+      console.log(tab.at(-1));
+
+      const formData: any = new FormData();
+      formData.append("avatar", {
+        uri: avatar,
+        name: `avatar.${tab.at(-1)}`,
+        type: `image/${tab.at(-1)}`,
+      });
+
+      try {
+        console.log("AXIOS");
+
+        const response = await axios.put(
+          "https://site--movies--hpyqm5px6d9r.code.run/user/avatar",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Update", response.data);
+      } catch (error: any) {
+        console.log("ERROR ==>", error);
+      }
+    }
+
     setRefresh(refresh + 1);
   };
 
@@ -163,7 +197,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
       if (result.canceled) {
         alert("Aucune photo n'a été sélectionée");
       } else {
-        setSelectedPic(result.assets[0].uri);
+        setAvatar(result.assets[0].uri);
       }
     } else {
       alert(
@@ -182,7 +216,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
       if (result.canceled) {
         alert("No picture selected");
       } else {
-        setSelectedPic(result.assets[0].uri);
+        setAvatar(result.assets[0].uri);
       }
     } else {
       alert(
@@ -202,6 +236,8 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   if (isLoading) {
     return <LottiesView />;
   }
+
+  // console.log(userData?.avatar);
 
   return (
     <StyledView className="items-center">
@@ -223,8 +259,25 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
           </StyledView>
         </StyledView>
 
-        {selectedPic && (
-          <StyledImage source={{ uri: selectedPic }} className="w-36 h-36" />
+        {avatar && (
+          <StyledView className="">
+            <StyledImage source={{ uri: avatar }} className="w-36 h-36" />
+            {/* <StyledText>{avatar}</StyledText> */}
+            <StyledTouchableOpacity
+              onPress={() => {
+                handleUpdate();
+              }}
+            >
+              <FontAwesome5 name="check" size={40} color="green" />
+            </StyledTouchableOpacity>
+            <StyledTouchableOpacity
+              onPress={() => {
+                setAvatar("");
+              }}
+            >
+              <FontAwesome name="close" size={40} color="red" />
+            </StyledTouchableOpacity>
+          </StyledView>
         )}
       </StyledView>
 
