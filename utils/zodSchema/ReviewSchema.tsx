@@ -5,6 +5,7 @@ export const ReviewSchema = z.object({
   opinion: z.string(),
   feeling: z.union([z.literal("Good"), z.literal("Neutral"), z.literal("Bad")]),
   movieId: z.number(),
+  movieName: z.string(),
 });
 
 export const GetReviewSchema = z.array(
@@ -19,9 +20,19 @@ export const GetReviewSchema = z.array(
     _id: z.string(),
     date: z.string(),
     movieId: z.number(),
+    movieName: z.string(),
     user: z.object({
       _id: z.string(),
       account: z.object({ username: z.string() }),
     }),
+  })
+);
+
+export const GetReviewsUser = z.array(
+  z.object({
+    title: z.string(),
+    opinion: z.string(),
+    _id: z.string(),
+    movieName: z.string(),
   })
 );

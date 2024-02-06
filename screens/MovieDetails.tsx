@@ -36,6 +36,9 @@ const StyledImage = styled(Image);
 const StyledScrollView = styled(ScrollView);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
+// REFRESH
+// export class Props {refreshTimeStamp:string | undefined}
+
 export default function MovieDetailScreen({
   navigation,
 }: Props): React.JSX.Element {
@@ -98,6 +101,7 @@ export default function MovieDetailScreen({
           zodError,
           setZodError
         );
+
         setReviews(parsedData);
         // console.log("Parse", parsedData);
       } catch (error: any) {
@@ -105,7 +109,7 @@ export default function MovieDetailScreen({
       }
     };
     fetchDataReview();
-  }, [reviews]);
+  }, []);
 
   if (error)
     return (
@@ -169,7 +173,10 @@ export default function MovieDetailScreen({
         <StyledTouchableOpacity
           className="border-2 bg-yellow-600 py-1 px-2 rounded-md mt-8"
           onPress={() => {
-            navigation.navigate("Review", { movieId: moviesData?.id });
+            navigation.navigate("Review", {
+              movieId: moviesData?.id,
+              movieName: moviesData?.title,
+            });
           }}
         >
           <StyledText className="color-white text-xl font-bold">

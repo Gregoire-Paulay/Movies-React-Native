@@ -4,7 +4,15 @@ import React, { useEffect, useState } from "react";
 import { LottiesView } from "../components/LottieView";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { Text, View, TouchableOpacity, Image, TextInput } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 
 // Schema
 import { z, ZodError } from "zod";
@@ -12,13 +20,13 @@ import {
   ProfileSchema,
   EmailSchema,
   UsernameSchema,
-  AvatarSchema,
 } from "../utils/zodSchema/UserSchema";
+import { GetReviewsUser } from "../utils/zodSchema/ReviewSchema";
 import { ParsedData } from "../utils/tools/parsedData";
 type TProfile = z.infer<typeof ProfileSchema>;
 type TEmail = z.infer<typeof EmailSchema>;
 type TUsername = z.infer<typeof UsernameSchema>;
-type TAvatar = z.infer<typeof AvatarSchema>;
+type TReviews = z.infer<typeof GetReviewsUser>;
 
 // Props
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -32,6 +40,7 @@ const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 const StyledImage = styled(Image);
 const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledScrollView = styled(ScrollView);
 
 export default function ProfileScreen(props: Props): React.JSX.Element {
   const { setToken, userToken } = useAuthContext();
@@ -39,6 +48,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   const [userData, setUserData] = useState<TProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<number>(0);
+  const [reviews, setReviews] = useState<TReviews | null>(null);
 
   // Error
   const [error, setError] = useState<Error | null>(null);
@@ -50,10 +60,11 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
+  const [avatarMessage, setAvatarMessage] = useState<string>("");
 
   // Gestion des changements pour l'utilisateur
   const handleUpdate = async () => {
-    console.log("Dans handleUpdate");
+    // console.log("Dans handleUpdate");
 
     if (email) {
       try {
@@ -129,7 +140,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
 
     if (avatar) {
       const tab = avatar.split(".");
-      console.log(tab.at(-1));
+      // console.log(tab.at(-1));
 
       const formData: any = new FormData();
       formData.append("avatar", {
@@ -139,8 +150,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
       });
 
       try {
-        console.log("AXIOS");
-
+        setAvatarMessage("Loading your new PP");
         const response = await axios.put(
           "https://site--movies--hpyqm5px6d9r.code.run/user/avatar",
           formData,
@@ -151,7 +161,10 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
             },
           }
         );
-        console.log("Update", response.data);
+        // console.log("Update", response.data);
+        setAvatarMessage("");
+        setAvatar("");
+        alert(response.data.message);
       } catch (error: any) {
         console.log("ERROR ==>", error);
       }
@@ -159,6 +172,35 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
 
     setRefresh(refresh + 1);
   };
+  useEffect(() => {
+    const fetchDataReviews = async () => {
+      try {
+        const { data } = await axios.get(
+          "https://site--movies--hpyqm5px6d9r.code.run/reviews/user",
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+              "Content-Type": "Application/json",
+            },
+          }
+        );
+        console.log(data);
+
+        const parsedData: TReviews | null = ParsedData<TReviews | null>(
+          data,
+          GetReviewsUser,
+          zodError,
+          setZodError
+        );
+        console.log(parsedData);
+
+        setReviews(parsedData);
+      } catch (error) {
+        setError(new Error("An error occured !!!"));
+      }
+    };
+    fetchDataReviews();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -240,139 +282,177 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   // console.log(userData?.avatar);
 
   return (
-    <StyledView className="items-center">
-      <StyledView>
-        <StyledView className="flex-row items-center gap-8">
-          <StyledImage
-            source={{
-              uri: userData?.avatar,
-            }}
-            className="w-36 h-36 rounded-full border-2"
-          />
-          <StyledView className="">
-            <StyledTouchableOpacity onPress={getPermissionToOpenLibrary}>
-              <FontAwesome name="photo" size={24} color="black" />
-            </StyledTouchableOpacity>
-            <StyledTouchableOpacity onPress={getPermissionToOpenCamera}>
-              <FontAwesome name="camera" size={24} color="black" />
-            </StyledTouchableOpacity>
-          </StyledView>
-        </StyledView>
-
-        {avatar && (
-          <StyledView className="">
-            <StyledImage source={{ uri: avatar }} className="w-36 h-36" />
-            {/* <StyledText>{avatar}</StyledText> */}
-            <StyledTouchableOpacity
-              onPress={() => {
-                handleUpdate();
+    <StyledScrollView>
+      <StyledView className="items-center bg-slate-700">
+        {/* Avatar Change */}
+        <StyledView className="mt-4">
+          <StyledView className="flex-row items-center gap-8">
+            <StyledImage
+              source={{
+                uri: userData?.avatar,
               }}
-            >
-              <FontAwesome5 name="check" size={40} color="green" />
-            </StyledTouchableOpacity>
-            <StyledTouchableOpacity
-              onPress={() => {
-                setAvatar("");
-              }}
-            >
-              <FontAwesome name="close" size={40} color="red" />
-            </StyledTouchableOpacity>
-          </StyledView>
-        )}
-      </StyledView>
-
-      <StyledView className="border-2 w-11/12 items-center mb-8 mt-4 bg-slate-400 rounded-md">
-        <StyledText className="text-2xl font-bold pb-2">MAIL</StyledText>
-        <StyledView className="flex-row gap-8 items-center mb-2">
-          <StyledText className="text-xl">{userData?.email}</StyledText>
-          <StyledTouchableOpacity
-            className="p-2"
-            onPress={() => {
-              setShowMailChange(true);
-            }}
-          >
-            <FontAwesome5 name="pen" size={24} color="black" />
-          </StyledTouchableOpacity>
-        </StyledView>
-
-        {showMailChange && (
-          <StyledView className="flex-row gap-8 items-center px-4 pb-2">
-            <StyledTextInput
-              className="text-xl border-2 rounded-xl py-2 px-3 w-3/5 bg-white"
-              placeholder="New Email"
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-              }}
+              className="w-36 h-36 rounded-full border-2"
             />
-            <StyledTouchableOpacity
-              onPress={() => {
-                handleUpdate();
-              }}
-            >
-              <FontAwesome5 name="check" size={40} color="green" />
-            </StyledTouchableOpacity>
-            <StyledTouchableOpacity
-              onPress={() => {
-                setShowMailChange(false);
-              }}
-            >
-              <FontAwesome name="close" size={40} color="red" />
-            </StyledTouchableOpacity>
+            <StyledView className="">
+              <StyledTouchableOpacity onPress={getPermissionToOpenLibrary}>
+                <FontAwesome name="photo" size={24} color="black" />
+              </StyledTouchableOpacity>
+              <StyledTouchableOpacity onPress={getPermissionToOpenCamera}>
+                <FontAwesome name="camera" size={24} color="black" />
+              </StyledTouchableOpacity>
+            </StyledView>
           </StyledView>
-        )}
-      </StyledView>
 
-      <StyledView className="border-2 w-11/12 items-center mb-8 bg-slate-400 rounded-md">
-        <StyledText className="text-2xl font-bold pb-2">USERNAME</StyledText>
-        <StyledView className="flex-row gap-8 items-center">
-          <StyledText className="text-xl">{userData?.username}</StyledText>
-          <StyledTouchableOpacity
-            className="p-2"
-            onPress={() => {
-              setShowUsernameChange(true);
-            }}
-          >
-            <FontAwesome5 name="pen" size={24} color="black" />
-          </StyledTouchableOpacity>
+          {avatar && (
+            <StyledView className="mt-4 items-center">
+              <StyledText className="text-xl text-white">
+                Your new Profile Picture
+              </StyledText>
+              <StyledImage
+                source={{ uri: avatar }}
+                className="w-36 h-36 border-2"
+              />
+              <StyledView className="flex-row justify-center gap-8">
+                <StyledTouchableOpacity
+                  onPress={() => {
+                    handleUpdate();
+                  }}
+                >
+                  <FontAwesome5 name="check" size={40} color="green" />
+                </StyledTouchableOpacity>
+                <StyledTouchableOpacity
+                  onPress={() => {
+                    setAvatar("");
+                  }}
+                >
+                  <FontAwesome name="close" size={40} color="red" />
+                </StyledTouchableOpacity>
+              </StyledView>
+            </StyledView>
+          )}
+          {avatarMessage && (
+            <StyledView>
+              <StyledText className="text-xl font-bold">
+                {avatarMessage}
+              </StyledText>
+              <ActivityIndicator size="large" color="white" />
+            </StyledView>
+          )}
         </StyledView>
 
-        {showUsernameChange && (
-          <StyledView className="flex-row gap-8 items-center px-4 pb-2">
-            <StyledTextInput
-              className="text-xl border-2 rounded-xl py-2 px-3 w-3/5 bg-white"
-              placeholder="New Username"
-              value={username}
-              onChangeText={(text) => {
-                setUsername(text);
-              }}
-            />
+        {/* Mail Change */}
+        <StyledView className="border-2 w-11/12 items-center mb-8 mt-4 bg-slate-400 rounded-md">
+          <StyledText className="text-2xl font-bold pb-2">MAIL</StyledText>
+          <StyledView className="flex-row gap-8 items-center mb-2">
+            <StyledText className="text-xl">{userData?.email}</StyledText>
             <StyledTouchableOpacity
+              className="p-2"
               onPress={() => {
-                handleUpdate();
+                setShowMailChange(true);
               }}
             >
-              <FontAwesome5 name="check" size={40} color="green" />
-            </StyledTouchableOpacity>
-            <StyledTouchableOpacity
-              onPress={() => {
-                setShowUsernameChange(false);
-              }}
-            >
-              <FontAwesome name="close" size={40} color="red" />
+              <FontAwesome5 name="pen" size={24} color="black" />
             </StyledTouchableOpacity>
           </StyledView>
-        )}
-      </StyledView>
 
-      <StyledTouchableOpacity
-        className=""
-        onPress={() => {
-          setToken(null);
-        }}
-      >
-        <StyledText className="text-xl">Disconnect</StyledText>
-      </StyledTouchableOpacity>
-    </StyledView>
+          {showMailChange && (
+            <StyledView className="flex-row gap-8 items-center px-4 pb-2">
+              <StyledTextInput
+                className="text-xl border-2 rounded-xl py-2 px-3 w-3/5 bg-white"
+                placeholder="New Email"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                }}
+              />
+              <StyledTouchableOpacity
+                onPress={() => {
+                  handleUpdate();
+                }}
+              >
+                <FontAwesome5 name="check" size={40} color="green" />
+              </StyledTouchableOpacity>
+              <StyledTouchableOpacity
+                onPress={() => {
+                  setShowMailChange(false);
+                }}
+              >
+                <FontAwesome name="close" size={40} color="red" />
+              </StyledTouchableOpacity>
+            </StyledView>
+          )}
+        </StyledView>
+
+        {/* Username Change */}
+        <StyledView className="border-2 w-11/12 items-center mb-8 bg-slate-400 rounded-md">
+          <StyledText className="text-2xl font-bold pb-2">USERNAME</StyledText>
+          <StyledView className="flex-row gap-8 items-center">
+            <StyledText className="text-xl">{userData?.username}</StyledText>
+            <StyledTouchableOpacity
+              className="p-2"
+              onPress={() => {
+                setShowUsernameChange(true);
+              }}
+            >
+              <FontAwesome5 name="pen" size={24} color="black" />
+            </StyledTouchableOpacity>
+          </StyledView>
+
+          {showUsernameChange && (
+            <StyledView className="flex-row gap-8 items-center px-4 pb-2">
+              <StyledTextInput
+                className="text-xl border-2 rounded-xl py-2 px-3 w-3/5 bg-white"
+                placeholder="New Username"
+                value={username}
+                onChangeText={(text) => {
+                  setUsername(text);
+                }}
+              />
+              <StyledTouchableOpacity
+                onPress={() => {
+                  handleUpdate();
+                }}
+              >
+                <FontAwesome5 name="check" size={40} color="green" />
+              </StyledTouchableOpacity>
+              <StyledTouchableOpacity
+                onPress={() => {
+                  setShowUsernameChange(false);
+                }}
+              >
+                <FontAwesome name="close" size={40} color="red" />
+              </StyledTouchableOpacity>
+            </StyledView>
+          )}
+        </StyledView>
+
+        {reviews?.map((review) => {
+          return (
+            <StyledView
+              key={review._id}
+              className="border-2 w-3/4 mb-2 items-center justify-center"
+            >
+              <StyledText>{review.title}</StyledText>
+              <StyledText>{review.opinion}</StyledText>
+              <StyledText>{review.movieName}</StyledText>
+            </StyledView>
+          );
+        })}
+
+        {/* Disconnect */}
+        <StyledTouchableOpacity
+          className="border-2 mb-4 p-2 rounded-md bg-rose-600"
+          onPress={() => {
+            setToken(null);
+          }}
+        >
+          <StyledText className="text-2xl text-white font-bold">
+            Disconnect
+          </StyledText>
+        </StyledTouchableOpacity>
+
+        <StyledView className="h-screen"></StyledView>
+      </StyledView>
+    </StyledScrollView>
   );
 }

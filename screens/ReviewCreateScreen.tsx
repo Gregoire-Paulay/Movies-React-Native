@@ -22,10 +22,13 @@ const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
-export default function ReviewCreateScreen(props: Props): React.JSX.Element {
+export default function ReviewCreateScreen({
+  navigation,
+}: Props): React.JSX.Element {
   const { userToken } = useAuthContext();
   const { params }: any = useRoute();
   const movieId = params.movieId;
+  const movieName = params.movieName;
 
   const [title, setTitle] = useState<string>("");
   const [feeling, setFeeling] = useState<"Good" | "Bad" | "Neutral">();
@@ -46,7 +49,7 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
         }
 
         const parsedData: TLogin | null = ParsedData<TLogin | null>(
-          { title, feeling, opinion, movieId },
+          { title, feeling, opinion, movieId, movieName },
           ReviewSchema,
           zodError,
           setZodError
@@ -72,6 +75,7 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
         // console.log(response.data.message);
         if (response.data.message === "Review created") {
           alert("Your review has been created");
+          navigation.goBack();
         }
       } catch (error: any) {
         setErrorMessage(error);
@@ -94,7 +98,11 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
 
       <StyledView className="flex-row gap-x-4">
         <StyledTouchableOpacity
-          className="bg-lime-500 px-4 py-2 rounded-xl"
+          className={
+            feeling === "Good"
+              ? "bg-lime-500 px-4 py-2 rounded-xl border-4 border-white"
+              : "bg-lime-500 px-4 py-2 rounded-xl border-4 border-transparent"
+          }
           onPress={() => {
             setFeeling("Good");
           }}
@@ -105,7 +113,11 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
         </StyledTouchableOpacity>
 
         <StyledTouchableOpacity
-          className="bg-neutral-500 px-4 py-2 rounded-xl"
+          className={
+            feeling === "Neutral"
+              ? "bg-neutral-500 px-4 py-2 rounded-xl border-4 border-white"
+              : "bg-neutral-500 px-4 py-2 rounded-xl border-4 border-transparent"
+          }
           onPress={() => {
             setFeeling("Neutral");
           }}
@@ -116,7 +128,11 @@ export default function ReviewCreateScreen(props: Props): React.JSX.Element {
         </StyledTouchableOpacity>
 
         <StyledTouchableOpacity
-          className="bg-rose-600 px-4 py-2 rounded-xl"
+          className={
+            feeling === "Bad"
+              ? "bg-rose-600 px-4 py-2 rounded-xl border-4 border-white"
+              : "bg-rose-600 px-4 py-2 rounded-xl border-4 border-transparent"
+          }
           onPress={() => {
             setFeeling("Bad");
           }}
