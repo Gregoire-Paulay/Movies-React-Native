@@ -3,6 +3,7 @@ import { useAuthContext } from "../contexts/auth-context";
 import React, { useEffect, useState } from "react";
 import { LottiesView } from "../components/LottieView";
 import { FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import userIcon from "../assets/image/user-icon.jpg";
 import * as ImagePicker from "expo-image-picker";
 import {
   Text,
@@ -26,12 +27,12 @@ import { ParsedData } from "../utils/tools/parsedData";
 type TProfile = z.infer<typeof ProfileSchema>;
 type TEmail = z.infer<typeof EmailSchema>;
 type TUsername = z.infer<typeof UsernameSchema>;
-type TReviews = z.infer<typeof GetReviewsUser>;
+// type TReviews = z.infer<typeof GetReviewsUser>;
 
 // Props
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../components/Nav";
-type Props = NativeStackScreenProps<RootStackParamList, "Profile">;
+import { RootSwipeParamList } from "../components/Nav";
+type Props = NativeStackScreenProps<RootSwipeParamList, "UserProfile">;
 
 // Tailwind CSS
 import { styled } from "nativewind";
@@ -48,7 +49,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   const [userData, setUserData] = useState<TProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<number>(0);
-  const [reviews, setReviews] = useState<TReviews | null>(null);
+  // const [reviews, setReviews] = useState<TReviews | null>(null);
 
   // Error
   const [error, setError] = useState<Error | null>(null);
@@ -172,35 +173,6 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
 
     setRefresh(refresh + 1);
   };
-  useEffect(() => {
-    const fetchDataReviews = async () => {
-      try {
-        const { data } = await axios.get(
-          "https://site--movies--hpyqm5px6d9r.code.run/reviews/user",
-          {
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-              "Content-Type": "Application/json",
-            },
-          }
-        );
-        console.log(data);
-
-        const parsedData: TReviews | null = ParsedData<TReviews | null>(
-          data,
-          GetReviewsUser,
-          zodError,
-          setZodError
-        );
-        console.log(parsedData);
-
-        setReviews(parsedData);
-      } catch (error) {
-        setError(new Error("An error occured !!!"));
-      }
-    };
-    fetchDataReviews();
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -287,18 +259,26 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
         {/* Avatar Change */}
         <StyledView className="mt-4">
           <StyledView className="flex-row items-center gap-8">
-            <StyledImage
-              source={{
-                uri: userData?.avatar,
-              }}
-              className="w-36 h-36 rounded-full border-2"
-            />
-            <StyledView className="">
+            {userData?.avatar ? (
+              <StyledImage
+                source={{
+                  uri: userData?.avatar,
+                }}
+                className="w-36 h-36 rounded-full border-2"
+              />
+            ) : (
+              <StyledImage
+                source={userIcon}
+                className="w-36 h-36 rounded-full border-2"
+              />
+            )}
+
+            <StyledView className="gap-4">
               <StyledTouchableOpacity onPress={getPermissionToOpenLibrary}>
-                <FontAwesome name="photo" size={24} color="black" />
+                <FontAwesome name="photo" size={32} color="black" />
               </StyledTouchableOpacity>
               <StyledTouchableOpacity onPress={getPermissionToOpenCamera}>
-                <FontAwesome name="camera" size={24} color="black" />
+                <FontAwesome name="camera" size={32} color="black" />
               </StyledTouchableOpacity>
             </StyledView>
           </StyledView>
@@ -426,7 +406,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
           )}
         </StyledView>
 
-        {reviews?.map((review) => {
+        {/* {reviews?.map((review) => {
           return (
             <StyledView
               key={review._id}
@@ -437,7 +417,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
               <StyledText>{review.movieName}</StyledText>
             </StyledView>
           );
-        })}
+        })} */}
 
         {/* Disconnect */}
         <StyledTouchableOpacity

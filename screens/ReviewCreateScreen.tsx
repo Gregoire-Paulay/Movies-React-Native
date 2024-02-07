@@ -75,7 +75,7 @@ export default function ReviewCreateScreen({
         // console.log(response.data.message);
         if (response.data.message === "Review created") {
           alert("Your review has been created");
-          navigation.goBack();
+          navigation.navigate("Popular");
         }
       } catch (error: any) {
         setErrorMessage(error);

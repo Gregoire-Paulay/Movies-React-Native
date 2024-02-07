@@ -92,9 +92,9 @@ export default function LoginScreen({ navigation }: Props): React.JSX.Element {
             }}
           >
             {showPassword ? (
-              <FontAwesome5 name="eye" size={24} color="black" />
-            ) : (
               <FontAwesome5 name="eye-slash" size={24} color="black" />
+            ) : (
+              <FontAwesome5 name="eye" size={24} color="black" />
             )}
           </StyledTouchableOpacity>
         </StyledView>

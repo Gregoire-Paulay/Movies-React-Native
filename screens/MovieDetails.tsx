@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "../contexts/auth-context";
 import { LottiesView } from "../components/LottieView";
+import userIcon from "../assets/image/user-icon.jpg";
 import {
   Text,
   View,
@@ -46,6 +47,7 @@ export default function MovieDetailScreen({
   const { userToken } = useAuthContext();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [finishloading, setFinishLoading] = useState<boolean>(false);
   const [moviesData, setMoviesData] = useState<TMovies | null>(null);
   const [reviews, setReviews] = useState<TReview | null>(null);
 
@@ -103,13 +105,14 @@ export default function MovieDetailScreen({
         );
 
         setReviews(parsedData);
+        setFinishLoading(true);
         // console.log("Parse", parsedData);
       } catch (error: any) {
         console.log("ERROR ==>", error);
       }
     };
     fetchDataReview();
-  }, []);
+  }, [isLoading]);
 
   if (error)
     return (
@@ -119,7 +122,7 @@ export default function MovieDetailScreen({
         </StyledText>
       </StyledView>
     );
-  if (isLoading) {
+  if (!finishloading) {
     return <LottiesView />;
   }
 
@@ -142,6 +145,7 @@ export default function MovieDetailScreen({
           })}
         </StyledView>
 
+        {/* Movie Poster */}
         <StyledView
           className="w-10/12 rounded-md border-2"
           style={styles.height}
@@ -157,6 +161,7 @@ export default function MovieDetailScreen({
           {moviesData?.overview}
         </StyledText>
 
+        {/* Movie Data */}
         <StyledView className="border-2 bg-slate-600 rounded-lg w-8/12 gap-1">
           <StyledText className="color-white text-center text-base">
             Release Date: {moviesData?.release_date}
@@ -170,6 +175,7 @@ export default function MovieDetailScreen({
           </StyledText>
         </StyledView>
 
+        {/* Reviews */}
         <StyledTouchableOpacity
           className="border-2 bg-yellow-600 py-1 px-2 rounded-md mt-8"
           onPress={() => {
@@ -199,11 +205,34 @@ export default function MovieDetailScreen({
             return (
               <StyledView
                 key={review._id}
-                className="border-2 w-3/4 mb-2 items-center justify-center"
+                className={
+                  review.feeling === "Bad"
+                    ? "border-2 w-10/12 mt-2 mb-4 items-center justify-center p-1 rounded-md bg-rose-400"
+                    : review.feeling === "Good"
+                    ? "border-2 w-10/12 mt-2 mb-4 items-center justify-center p-1 rounded-md bg-lime-500"
+                    : "border-2 w-10/12 mt-2 mb-4 items-center justify-center p-1 rounded-md bg-slate-400"
+                }
               >
-                <StyledText>{review.title}</StyledText>
-                <StyledText>{review.opinion}</StyledText>
-                <StyledText>{review.user.account.username}</StyledText>
+                <StyledText className="text-2xl font-bold">
+                  {review.title}
+                </StyledText>
+                <StyledView className="flex-row gap-4 mb-2 items-center">
+                  {review.user.account.avatar ? (
+                    <StyledImage
+                      source={{ uri: review.user.account.avatar }}
+                      className="h-12 w-12 rounded-full"
+                    />
+                  ) : (
+                    <StyledImage
+                      source={userIcon}
+                      className="w-12 h-12 rounded-full border-2"
+                    />
+                  )}
+
+                  <StyledText>{review.user.account.username}</StyledText>
+                  <StyledText>{review.date}</StyledText>
+                </StyledView>
+                <StyledText className="text-base">{review.opinion}</StyledText>
               </StyledView>
             );
           })}

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { LottiesView } from "../components/LottieView";
+import { Entypo } from "@expo/vector-icons";
 import {
   Text,
   View,
@@ -88,14 +89,19 @@ export default function SearchMoviesScreen({
     <StyledScrollView>
       <StyledView className="items-center bg-slate-900">
         <StyledView className="flex-row justify-center items-center gap-4 py-4">
-          <StyledTextInput
-            className="text-xl border-2 rounded-xl py-2 pl-3 w-3/4 bg-gray-100"
-            placeholder="Title"
-            value={title}
-            onChangeText={(text) => {
-              setTitle(text);
-            }}
-          />
+          <StyledView className="text-xl border-2 rounded-xl py-2 px-3 w-3/4 bg-gray-100 flex-row justify-between">
+            <StyledTextInput
+              className="text-xl"
+              placeholder="Title"
+              value={title}
+              onChangeText={(text) => {
+                setTitle(text);
+              }}
+            />
+            <StyledTouchableOpacity onPress={() => setTitle("")}>
+              <Entypo name="circle-with-cross" size={30} color="black" />
+            </StyledTouchableOpacity>
+          </StyledView>
           <StyledTouchableOpacity>
             <StyledText
               className="text-xl font-bold text-white"

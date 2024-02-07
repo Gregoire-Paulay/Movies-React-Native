@@ -23,7 +23,7 @@ export const GetReviewSchema = z.array(
     movieName: z.string(),
     user: z.object({
       _id: z.string(),
-      account: z.object({ username: z.string() }),
+      account: z.object({ username: z.string(), avatar: z.string() }),
     }),
   })
 );

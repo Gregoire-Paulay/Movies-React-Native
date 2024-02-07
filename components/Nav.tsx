@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { withExpoSnack } from "nativewind";
 import { useAuthContext } from "../contexts/auth-context";
 import { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ import PopularMoviesScreen from "../screens/PopularMoviesScreen";
 import SearchMoviesScreen from "../screens/SearchMoviesScreen";
 import MovieDetailScreen from "../screens/MovieDetails";
 import ReviewCreateScreen from "../screens/ReviewCreateScreen";
+import UserReviewsScreen from "../screens/UserReviewsScreen";
 
 export type RootStackParamList = {
   Signup: undefined;
@@ -35,10 +37,15 @@ export type RootTabParamList = {
   TabSearch: undefined;
   TabProfile: undefined;
 };
+export type RootSwipeParamList = {
+  UserProfile: undefined;
+  UserReviews: undefined;
+};
 
 // Initialization Tab
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Swipe = createMaterialTopTabNavigator<RootSwipeParamList>();
 
 const Nav = () => {
   const { userToken, setUserToken } = useAuthContext();
@@ -162,9 +169,43 @@ const Nav = () => {
               ),
             }}
           >
-            {() => (
+            {/* {() => (
               <Stack.Navigator>
                 <Stack.Screen name="Profile" component={ProfileScreen} />
+              </Stack.Navigator>
+            )} */}
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen name="Profile">
+                  {() => (
+                    <Swipe.Navigator
+                      screenOptions={() => ({
+                        tabBarLabelStyle: { fontSize: 16 },
+                        tabBarStyle: { backgroundColor: "#1E1E1E" },
+                        tabBarActiveTintColor: "#FFF",
+                        tabBarInactiveTintColor: "#595959",
+                        tabBarIndicatorStyle: {
+                          backgroundColor: "#5C48D3",
+                        },
+                      })}
+                    >
+                      <Swipe.Screen
+                        name="UserProfile"
+                        options={{
+                          tabBarLabel: "Profile",
+                        }}
+                        component={ProfileScreen}
+                      />
+                      <Swipe.Screen
+                        name="UserReviews"
+                        options={{
+                          tabBarLabel: "Reviews",
+                        }}
+                        component={UserReviewsScreen}
+                      />
+                    </Swipe.Navigator>
+                  )}
+                </Stack.Screen>
               </Stack.Navigator>
             )}
           </Tab.Screen>
