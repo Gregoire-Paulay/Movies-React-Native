@@ -89,8 +89,10 @@ const Nav = () => {
         <Tab.Navigator
           screenOptions={{
             headerShown: false,
-            tabBarActiveTintColor: "tomato",
-            tabBarInactiveTintColor: "gray",
+            tabBarLabelStyle: { fontSize: 16 },
+            tabBarStyle: { backgroundColor: "#1E1E1E" },
+            tabBarActiveTintColor: "#ffffff",
+            tabBarInactiveTintColor: "#595959",
           }}
         >
           <Tab.Screen
@@ -98,7 +100,7 @@ const Nav = () => {
             options={{
               tabBarLabel: "Popular",
               tabBarIcon: () => (
-                <Ionicons name="home" size={24} color="black" />
+                <Ionicons name="home" size={24} color="#ffffff" />
               ),
             }}
           >
@@ -140,14 +142,23 @@ const Nav = () => {
                 <MaterialCommunityIcons
                   name="movie-open"
                   size={24}
-                  color="black"
+                  color="#ffffff"
                 />
               ),
             }}
           >
             {() => (
               <Stack.Navigator>
-                <Stack.Screen name="Search" component={SearchMoviesScreen} />
+                <Stack.Screen
+                  name="Search"
+                  component={SearchMoviesScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "Movies Search",
+                    // headerStyle: { backgroundColor: "#1E1E1E" },
+                    // headerTintColor: "#ffffff",
+                  }}
+                />
                 <Stack.Screen
                   name="DetailsSearch"
                   component={MovieDetailScreen}
@@ -165,7 +176,7 @@ const Nav = () => {
             options={{
               tabBarLabel: "Profile",
               tabBarIcon: () => (
-                <AntDesign name="profile" size={24} color="black" />
+                <AntDesign name="profile" size={24} color="#ffffff" />
               ),
             }}
           >

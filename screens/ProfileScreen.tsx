@@ -22,12 +22,10 @@ import {
   EmailSchema,
   UsernameSchema,
 } from "../utils/zodSchema/UserSchema";
-import { GetReviewsUser } from "../utils/zodSchema/ReviewSchema";
 import { ParsedData } from "../utils/tools/parsedData";
 type TProfile = z.infer<typeof ProfileSchema>;
 type TEmail = z.infer<typeof EmailSchema>;
 type TUsername = z.infer<typeof UsernameSchema>;
-// type TReviews = z.infer<typeof GetReviewsUser>;
 
 // Props
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -49,7 +47,6 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   const [userData, setUserData] = useState<TProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<number>(0);
-  // const [reviews, setReviews] = useState<TReviews | null>(null);
 
   // Error
   const [error, setError] = useState<Error | null>(null);
@@ -405,19 +402,6 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
             </StyledView>
           )}
         </StyledView>
-
-        {/* {reviews?.map((review) => {
-          return (
-            <StyledView
-              key={review._id}
-              className="border-2 w-3/4 mb-2 items-center justify-center"
-            >
-              <StyledText>{review.title}</StyledText>
-              <StyledText>{review.opinion}</StyledText>
-              <StyledText>{review.movieName}</StyledText>
-            </StyledView>
-          );
-        })} */}
 
         {/* Disconnect */}
         <StyledTouchableOpacity

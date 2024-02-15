@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { LottiesView } from "../components/LottieView";
 import { Entypo } from "@expo/vector-icons";
 import {

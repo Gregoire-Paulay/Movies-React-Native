@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAuthContext } from "../contexts/auth-context";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 
