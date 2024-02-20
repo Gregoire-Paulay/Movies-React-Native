@@ -3,7 +3,7 @@ Movies React Native
 </h1>
 
 <h2 align="center">
-<img width="250" alt="Movie Clap" src="/assets/image/Clap.png">
+<img width="250" alt="Movie Clap" src="/assets/image/Clap.png" >
 </h2>
 
 ## Overview
