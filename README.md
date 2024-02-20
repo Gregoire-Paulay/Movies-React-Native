@@ -16,7 +16,7 @@ Here you wll find the latest popular movies, details for all of them and you can
 <div align="center">
 <img width="200" height="400" src="https://res.cloudinary.com/dy2ayuond/image/upload/v1708441338/movies/Movie-details-3.png"/>
 <img width="200" height="400" src="https://res.cloudinary.com/dy2ayuond/image/upload/v1708441711/movies/Movie-details-2.png"/>
-<img width="200" height="400" src="hhttps://res.cloudinary.com/dy2ayuond/image/upload/v1708441685/movies/Create-Review.png"/>
+<img width="200" height="400" src="https://res.cloudinary.com/dy2ayuond/image/upload/v1708441685/movies/Create-Review.png"/>
 <img width="200" height="400" src="https://res.cloudinary.com/dy2ayuond/image/upload/v1708441271/movies/User-review.png"/>
 </div>
 <br/>
