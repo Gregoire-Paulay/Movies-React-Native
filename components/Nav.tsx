@@ -31,6 +31,8 @@ export type RootStackParamList = {
   Details: any;
   Review: any;
   DetailsSearch: any;
+  UserProfile: undefined;
+  UserReviews: undefined;
 };
 export type RootTabParamList = {
   TabPopular: undefined;
@@ -173,6 +175,7 @@ const Nav = () => {
 
           <Tab.Screen
             name="TabProfile"
+            key={0}
             options={{
               tabBarLabel: "Profile",
               tabBarIcon: () => (
@@ -180,43 +183,24 @@ const Nav = () => {
               ),
             }}
           >
-            {/* {() => (
-              <Stack.Navigator>
-                <Stack.Screen name="Profile" component={ProfileScreen} />
-              </Stack.Navigator>
-            )} */}
             {() => (
               <Stack.Navigator>
-                <Stack.Screen name="Profile">
-                  {() => (
-                    <Swipe.Navigator
-                      screenOptions={() => ({
-                        tabBarLabelStyle: { fontSize: 16 },
-                        tabBarStyle: { backgroundColor: "#1E1E1E" },
-                        tabBarActiveTintColor: "#FFF",
-                        tabBarInactiveTintColor: "#595959",
-                        tabBarIndicatorStyle: {
-                          backgroundColor: "#5C48D3",
-                        },
-                      })}
-                    >
-                      <Swipe.Screen
-                        name="UserProfile"
-                        options={{
-                          tabBarLabel: "Profile",
-                        }}
-                        component={ProfileScreen}
-                      />
-                      <Swipe.Screen
-                        name="UserReviews"
-                        options={{
-                          tabBarLabel: "Reviews",
-                        }}
-                        component={UserReviewsScreen}
-                      />
-                    </Swipe.Navigator>
-                  )}
-                </Stack.Screen>
+                <Stack.Screen
+                  name="UserProfile"
+                  component={ProfileScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "User profile",
+                  }}
+                />
+                <Stack.Screen
+                  name="UserReviews"
+                  component={UserReviewsScreen}
+                  options={{
+                    headerTitleAlign: "center",
+                    headerTitle: "User reviews",
+                  }}
+                />
               </Stack.Navigator>
             )}
           </Tab.Screen>

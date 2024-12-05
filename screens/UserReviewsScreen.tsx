@@ -22,7 +22,7 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
-export default function UserReviewsScreen(props: Props) {
+export default function UserReviewsScreen({ navigation }: Props) {
   const { userToken } = useAuthContext();
   const [reviews, setReviews] = useState<TReviews | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -137,7 +137,7 @@ export default function UserReviewsScreen(props: Props) {
             return (
               <StyledView
                 key={review._id}
-                className="border-2 w-11/12 mt-4 mb-2 bg-slate-300 rounded-lg p-2"
+                className="border-2 w-11/12 mt-4 mb-2 bg-slate-300 rounded-lg p-3 relative"
               >
                 <StyledText className="text-center text-xl font-bold">
                   {review.title}
@@ -146,7 +146,7 @@ export default function UserReviewsScreen(props: Props) {
                   {review.movieName}
                 </StyledText>
                 <StyledTouchableOpacity
-                  className="absolute right-2 top-2"
+                  className="absolute top-2 right-1"
                   onPress={() => {
                     setShowDeleteReview(true);
                     setReviewID(review._id);
@@ -159,6 +159,17 @@ export default function UserReviewsScreen(props: Props) {
               </StyledView>
             );
           })}
+
+          <StyledView className="mt-8 border-2 bg-slate-400 p-2 rounded-md shadow-md">
+            <StyledText
+              className="text-xl font-bold"
+              onPress={() => {
+                navigation.navigate("UserProfile");
+              }}
+            >
+              Profil utilisateur
+            </StyledText>
+          </StyledView>
         </StyledView>
       ) : (
         <StyledText className="text-2xl font-bold text-white mt-4">

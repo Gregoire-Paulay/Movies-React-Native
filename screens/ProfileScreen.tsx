@@ -41,7 +41,9 @@ const StyledImage = styled(Image);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledScrollView = styled(ScrollView);
 
-export default function ProfileScreen(props: Props): React.JSX.Element {
+export default function ProfileScreen({
+  navigation,
+}: Props): React.JSX.Element {
   const { setToken, userToken } = useAuthContext();
 
   const [userData, setUserData] = useState<TProfile | null>(null);
@@ -251,7 +253,7 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
   // console.log(userData?.avatar);
 
   return (
-    <StyledScrollView>
+    <StyledScrollView key={0}>
       <StyledView className="items-center bg-slate-700">
         {/* Avatar Change */}
         <StyledView className="mt-4">
@@ -279,7 +281,6 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
               </StyledTouchableOpacity>
             </StyledView>
           </StyledView>
-
           {avatar && (
             <StyledView className="mt-4 items-center">
               <StyledText className="text-xl text-white">
@@ -315,6 +316,17 @@ export default function ProfileScreen(props: Props): React.JSX.Element {
               <ActivityIndicator size="large" color="white" />
             </StyledView>
           )}
+        </StyledView>
+
+        <StyledView className="mt-8 mb-4 border-2 bg-slate-400 p-2 rounded-md shadow-md">
+          <StyledText
+            className="text-xl font-bold "
+            onPress={() => {
+              navigation.navigate("UserReviews");
+            }}
+          >
+            Voir mes reviews
+          </StyledText>
         </StyledView>
 
         {/* Mail Change */}
